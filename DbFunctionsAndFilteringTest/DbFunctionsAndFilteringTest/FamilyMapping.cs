@@ -7,15 +7,13 @@ using System.Text;
 
 namespace DbFunctionsAndFilteringTest
 {
-    public class FruitMapping : EntityTypeConfiguration<Fruit>
+    public class FamilyMapping : EntityTypeConfiguration<Family>
     {
-        public FruitMapping()
+        public FamilyMapping()
         {
             HasKey(x => x.Id);
 
-            HasRequired(f => f.Family).WithMany(fam => fam.Fruits).Map(fk => fk.MapKey("FamilyId"));
-
-            ToTable("Fruit");
+            ToTable("Family");
         }
     }
 }

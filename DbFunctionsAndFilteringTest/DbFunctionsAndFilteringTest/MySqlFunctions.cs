@@ -16,8 +16,8 @@ namespace DbFunctionsAndFilteringTest
             return (value.ToString(format, CultureInfo.CreateSpecificCulture(culture)));
         }
 
-        [DbFunction("CodeFirstDatabaseSchema", "FamilyCount")]
-        public static int? FamilyCount(string family)
+        [DbFunction("CodeFirstDatabaseSchema", "FruitCount")]
+        public static int? FruitCount(string family)
         {
             throw new NotSupportedException("Direct calls are not supported.");
         }
