@@ -56,15 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDeleted.cs" />
     <Compile Include="MyContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlFunctions.cs" />
-    <Compile Include="Frugt.cs" />
-    <Compile Include="FrugtMapping.cs" />
+    <Compile Include="Fruit.cs" />
+    <Compile Include="FruitMapping.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractStoreModelConvention.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

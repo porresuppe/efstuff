@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity.Core.Metadata.Edm;
+using EntityFramework.DynamicFilters;
 
 namespace DbFunctionsAndFilteringTest
 {
@@ -13,24 +14,30 @@ namespace DbFunctionsAndFilteringTest
         {
         }
 
-        public virtual DbSet<Frugt> Frugt { get; set; }
+        public virtual DbSet<Fruit> Fruit { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             AddConfigurations(modelBuilder);
             AddConventions(modelBuilder);
+            AddFilters(modelBuilder);
         }
 
         private static void AddConfigurations(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new FrugtMapping());
+            modelBuilder.Configurations.Add(new FruitMapping());
         }
 
         private static void AddConventions(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new FormatFunctionConvention());
-            modelBuilder.Conventions.Add(new FamilieCountFunctionConvention());
+            modelBuilder.Conventions.Add(new FamilyCountFunctionConvention());
+        }
+
+        private void AddFilters(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Filter("IsDeleted", (IDeleted d) => d.Deleted, false);
         }
     }
 
@@ -51,13 +58,13 @@ namespace DbFunctionsAndFilteringTest
         }
     }
 
-    public class FamilieCountFunctionConvention : AbstractStoreModelConvention
+    public class FamilyCountFunctionConvention : AbstractStoreModelConvention
     {
         public override void Apply(EdmModel item, DbModel model)
         {
-            var valueParameter = FunctionParameter.Create("familie", this.GetStorePrimitiveType(model, PrimitiveTypeKind.String), ParameterMode.In);
+            var valueParameter = FunctionParameter.Create("family", this.GetStorePrimitiveType(model, PrimitiveTypeKind.String), ParameterMode.In);
             var returnValue = FunctionParameter.Create("result", this.GetStorePrimitiveType(model, PrimitiveTypeKind.Int32), ParameterMode.ReturnValue);
-            CreateAndAddFunction(item, "FamilieCount", new[] { valueParameter }, new[] { returnValue });
+            CreateAndAddFunction(item, "FamilyCount", new[] { valueParameter }, new[] { returnValue });
         }
     }
 }
