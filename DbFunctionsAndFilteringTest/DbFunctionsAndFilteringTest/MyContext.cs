@@ -1,8 +1,10 @@
-﻿using System.Data.Entity.Core.Metadata.Edm;
+﻿using System;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using EntityFramework.DynamicFilters;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Collections.Generic;
 
 namespace DbFunctionsAndFilteringTest
 {
@@ -36,10 +38,12 @@ namespace DbFunctionsAndFilteringTest
             modelBuilder.Conventions.Add(new FruitCountFunctionConvention());
         }
 
-        private void AddFilters(DbModelBuilder modelBuilder)
+        private static void AddFilters(DbModelBuilder modelBuilder)
         {
             modelBuilder.Filter("IsDeleted", (IDeleted d) => d.Deleted, false);
-            modelBuilder.Filter("OnlyMusaceaeFamily", (Fruit f) => f.Family.Name == "Musaceae");
+            modelBuilder.Filter("SingleFamily", (Fruit f, string famName) => f.Family.Name == famName, "");
+            var values = new List<string> { "Banan", "Ananas" };
+            modelBuilder.Filter("ContainsFruit", (Fruit f, List<string> valueList) => valueList.Contains(f.Name), () => values);
         }
     }
 

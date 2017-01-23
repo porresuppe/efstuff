@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.SqlServer;
+﻿using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.Linq;
 using EntityFramework.DynamicFilters;
@@ -11,7 +12,8 @@ namespace DbFunctionsAndFilteringTest
         {
             using (var db = new MyContext())
             {
-                db.DisableFilter("OnlyMusaceaeFamily");
+                db.DisableFilter("SingleFamily");
+                db.DisableFilter("ContainsFruit");
 
                 // SQL Server only function not part of System.Data.Entity.SqlServer.SqlFunctions
                 var formatQuery = db.Fruits.Select(p => p.Created.Format("D", "pt-PT"));
@@ -43,8 +45,19 @@ namespace DbFunctionsAndFilteringTest
                 Debug.WriteLine("Deleted rows: " + simpleQuery.Select(f => f.Name).Flatten());
                 db.DisableFilter("IsDeleted");
                 Debug.WriteLine("Filter 'IsDeleted' disabled: " + simpleQuery.Select(f => f.Name).Flatten());
-                db.EnableFilter("OnlyMusaceaeFamily");
-                Debug.WriteLine("Filter 'OnlyMusaceaeFamily' in use: " + simpleQuery.Select(f => f.Name).Flatten());
+                
+                db.EnableFilter("SingleFamily");
+                db.SetFilterScopedParameterValue("SingleFamily", "famName", "Bromeliaceae");
+                Debug.WriteLine("Filter 'SingleFamily:Bromeliaceae' in use: " + simpleQuery.Select(f => f.Name).Flatten());
+                db.SetFilterScopedParameterValue("SingleFamily", "famName", "Musaceae");
+                Debug.WriteLine("Filter 'SingleFamily:Musaceae' in use: " + simpleQuery.Select(f => f.Name).Flatten());
+                db.DisableFilter("SingleFamily");
+                Debug.WriteLine("Filter 'SingleFamily' disabled: " + simpleQuery.Select(f => f.Name).Flatten());
+
+                db.EnableFilter("ContainsFruit");
+                Debug.WriteLine("Filter 'ContainsFruit' in use: " + simpleQuery.Select(f => f.Name).Flatten());
+                db.SetFilterScopedParameterValue("ContainsFruit", "valueList", new List<string> { "Plantain" });
+                Debug.WriteLine("Filter 'ContainsFruit' in use (other): " + simpleQuery.Select(f => f.Name).Flatten());
             }
         }
     }
