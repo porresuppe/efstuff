@@ -44,7 +44,10 @@ namespace DbFunctionsAndFilteringTest
             modelBuilder.Filter("SingleFamily", (Fruit f, string famName) => f.Family.Name == famName, "");
             var values = new List<string> { "Banan", "Ananas" };
             modelBuilder.Filter("ContainsFruit", (Fruit f, List<string> valueList) => valueList.Contains(f.Name), () => values);
+            modelBuilder.Filter("MyContextFamily", (Fruit f, string familyName) => f.Family.Name == familyName, (MyContext db) => db.FamilyName);
         }
+
+        public string FamilyName { get; set; }
     }
 
     public class FormatFunctionConvention : AbstractStoreModelConvention
